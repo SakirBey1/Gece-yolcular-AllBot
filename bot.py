@@ -29,7 +29,7 @@ async def start(event):
                     buttons=(
                       [Button.url('🌟 Beni Bir Gruba Ekle', 'https://t.me/loungetaggerbot?startgroup=a'),
                       Button.url('📣 Support', 'https://t.me/geceylcular'),
-                      Button.url('💻 Developer', 'https://t.me/SakirBey1'),
+                      Button.url('💻 Developer', 'https://t.me/SakirBey2'),
                       Button.url('🚀 Sahibim', 'https://t.me/evetbenim38')]
                     ),
                     link_preview=False
@@ -41,7 +41,7 @@ async def help(event):
                     buttons=(
                       [Button.url('🌟 Beni Bir Gruba Ekle', 'https://t.me/loungetaggerbot?startgroup=a'),
                        Button.url('📣 Support', 'https://t.me/geceylcular'),
-                       Button.url('💻 Developer', 'https://t.me/SakirBey1'),
+                       Button.url('💻 Developer', 'https://t.me/SakirBey2'),
                       Button.url('🚀 Sahibim', 'https://t.me/evetbenim38')]
                     ),
                     link_preview=False
@@ -106,7 +106,18 @@ async def mentionall(event):
         await asyncio.sleep(2)
         usrnum = 0
         usrtxt = ""
-
+        
+@bot.on(events.NewMessage(pattern=lambda x: "/tagadmin" in x.lower(), incoming=True))
+async def tag_admin(event):
+    chat = await event.get_input_chat()
+    text = "Adminleri etiketler"
+    async for x in event.client.iter_participants(chat, 100, filter=ChannelParticipantsAdmins):
+        text += f" \n [{x.first_name}](tg://user?id={x.id})"
+    if event.reply_to_msg_id:
+        await event.client.send_message(event.chat_id, text, reply_to=event.reply_to_msg_id)
+    else:
+        await event.reply(text)
+    raise StopPropagation
 
 print(">> Bot çalıyor merak etme 🚀 @geceylcular bilgi alabilirsin <<")
 client.run_until_disconnected()
